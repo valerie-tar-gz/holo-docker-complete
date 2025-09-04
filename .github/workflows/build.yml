@@ -19,7 +19,7 @@ jobs:
 
     - name: Login to GitHub Container Registry
       run: |
-        echo $GITHUB_TOKEN | docker login ghcr.io -u SteamDeckHomebrew --password-stdin
+        echo $GITHUB_TOKEN | docker login ghcr.io -u valerie-tar-gz --password-stdin
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -37,12 +37,12 @@ jobs:
     - name: Build Rust toolchain image
       run: |
         cd languages
-        docker build -t ghcr.io/steamdeckhomebrew/holo-toolchain-rust:latest -f ./rust.dockerfile .
+        docker build -t ghcr.io/valerie-tar-gz/holo-toolchain-rust:latest -f ./rust.dockerfile .
 
     - name: Build Go toolchain image
       run: |
         cd languages
-        docker build -t ghcr.io/steamdeckhomebrew/holo-toolchain-go:latest -f ./go.dockerfile .
+        docker build -t ghcr.io/valerie-tar-gz/holo-toolchain-go:latest -f ./go.dockerfile .
 
     - name: Tag all images
       run: |
@@ -52,9 +52,9 @@ jobs:
             "${{ steps.download.outputs.MAJOR_VERSION }}" \
             "${{ steps.download.outputs.MINOR_VERSION }}"
         do
-          docker tag ghcr.io/steamdeckhomebrew/holo-base:latest             ghcr.io/steamdeckhomebrew/holo-base:$tag
-          docker tag ghcr.io/steamdeckhomebrew/holo-toolchain-rust:latest   ghcr.io/steamdeckhomebrew/holo-toolchain-rust:$tag
-          docker tag ghcr.io/steamdeckhomebrew/holo-toolchain-go:latest     ghcr.io/steamdeckhomebrew/holo-toolchain-go:$tag
+          docker tag ghcr.io/valerie-tar-gz/holo-base:latest             ghcr.io/valerie-tar-gz/holo-base:$tag
+          docker tag ghcr.io/valerie-tar-gz/holo-toolchain-rust:latest   ghcr.io/valerie-tar-gz/holo-toolchain-rust:$tag
+          docker tag ghcr.io/valerie-tar-gz/holo-toolchain-go:latest     ghcr.io/valerie-tar-gz/holo-toolchain-go:$tag
         done
 
     - name: Wait for other runs to complete
@@ -63,13 +63,13 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Push Base image
-      run: docker push --all-tags ghcr.io/steamdeckhomebrew/holo-base
+      run: docker push --all-tags ghcr.io/valerie-tar-gz/holo-base
 
     - name: Push Rust toolchain image
-      run: docker push --all-tags ghcr.io/steamdeckhomebrew/holo-toolchain-rust
+      run: docker push --all-tags ghcr.io/valerie-tar-gz/holo-toolchain-rust
 
     - name: Push Go toolchain image
-      run: docker push --all-tags ghcr.io/steamdeckhomebrew/holo-toolchain-go
+      run: docker push --all-tags ghcr.io/valerie-tar-gz/holo-toolchain-go
 
     - name: Log out of GitHub Container Registry
       run: |
