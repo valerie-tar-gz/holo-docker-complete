@@ -34,6 +34,11 @@ jobs:
     - name: Cleanup SteamOS image
       run: rm -rf ./steamos_image ./steamos
 
+    - name: Build Minimal image
+      run: |
+        cd image_modifications
+        docker build -t ghcr.io/valerie-tar-gz/holo-docker-minimal:latest -f ./minimal.dockerfile .
+
     - name: Tag all images
       run: |
         for tag in \
@@ -43,6 +48,7 @@ jobs:
             "${{ steps.download.outputs.MINOR_VERSION }}"
         do
           docker tag ghcr.io/valerie-tar-gz/holo-docker-complete:latest             ghcr.io/valerie-tar-gz/holo-docker-complete:$tag
+          docker tag ghcr.io/valerie-tar-gz/holo-docker-minimal:latest             ghcr.io/valerie-tar-gz/holo-docker-minimal:$tag
         done
 
     - name: Wait for other runs to complete
@@ -52,6 +58,9 @@ jobs:
 
     - name: Push Base image
       run: docker push --all-tags ghcr.io/valerie-tar-gz/holo-docker-complete
+
+    - name: Push Minimal image
+      run: docker push --all-tags ghcr.io/valerie-tar-gz/holo-docker-minimal
 
     - name: Log out of GitHub Container Registry
       run: |
