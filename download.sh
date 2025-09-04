@@ -9,7 +9,8 @@ FILE=$(echo "$IMAGE" | jq -r ".update_path" | sed 's/\.raucb/\.img.zst/')
 {
     echo "Downloading image $FILE"
     curl --user $AUTH "https://steamdeck-images.steamos.cloud/$FILE" -o ./steamos.img.zst
-    zstd -d ./steamos.img.zst -o ./steamos_image
+    mkdir ./steamos_image
+    zstd -d ./steamos.img.zst -o ./steamos_image/disk.img
     rm ./steamos.img.zst
 } >&2
 
