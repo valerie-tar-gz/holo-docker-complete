@@ -34,16 +34,6 @@ jobs:
     - name: Cleanup SteamOS image
       run: rm -rf ./steamos_image ./steamos
 
-    - name: Build Rust toolchain image
-      run: |
-        cd languages
-        docker build -t ghcr.io/valerie-tar-gz/holo-toolchain-rust:latest -f ./rust.dockerfile .
-
-    - name: Build Go toolchain image
-      run: |
-        cd languages
-        docker build -t ghcr.io/valerie-tar-gz/holo-toolchain-go:latest -f ./go.dockerfile .
-
     - name: Tag all images
       run: |
         for tag in \
@@ -52,9 +42,7 @@ jobs:
             "${{ steps.download.outputs.MAJOR_VERSION }}" \
             "${{ steps.download.outputs.MINOR_VERSION }}"
         do
-          docker tag ghcr.io/valerie-tar-gz/holo-base:latest             ghcr.io/valerie-tar-gz/holo-base:$tag
-          docker tag ghcr.io/valerie-tar-gz/holo-toolchain-rust:latest   ghcr.io/valerie-tar-gz/holo-toolchain-rust:$tag
-          docker tag ghcr.io/valerie-tar-gz/holo-toolchain-go:latest     ghcr.io/valerie-tar-gz/holo-toolchain-go:$tag
+          docker tag ghcr.io/valerie-tar-gz/holo-docker-complete:latest             ghcr.io/valerie-tar-gz/holo-docker-complete:$tag
         done
 
     - name: Wait for other runs to complete
@@ -63,13 +51,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Push Base image
-      run: docker push --all-tags ghcr.io/valerie-tar-gz/holo-base
-
-    - name: Push Rust toolchain image
-      run: docker push --all-tags ghcr.io/valerie-tar-gz/holo-toolchain-rust
-
-    - name: Push Go toolchain image
-      run: docker push --all-tags ghcr.io/valerie-tar-gz/holo-toolchain-go
+      run: docker push --all-tags ghcr.io/valerie-tar-gz/holo-docker-complete
 
     - name: Log out of GitHub Container Registry
       run: |
